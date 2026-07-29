@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday, Pradipta!</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Outfit:wght@300;400;500;600;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#16213E;
+    --navy-deep:#0D1526;
+    --gold:#E8A33D;
+    --coral:#F2704F;
+    --cream:#FAF3E7;
+    --sage:#8A9B6E;
+    --card:#1E2C4F;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--navy-deep);
+    color:var(--cream);
+    font-family:'Outfit', sans-serif;
+    overflow-x:hidden;
+  }
+  .blob{
+    position:fixed;
+    border-radius:50%;
+    filter:blur(90px);
+    opacity:.35;
+    z-index:0;
+    pointer-events:none;
+  }
+  .blob1{ width:420px; height:420px; background:var(--coral); top:-120px; left:-100px; }
+  .blob2{ width:380px; height:380px; background:var(--gold); bottom:10%; right:-120px; }
+  .blob3{ width:300px; height:300px; background:var(--sage); top:40%; left:50%; opacity:.2; }
+
+  section{ position:relative; z-index:1; padding:80px 24px; max-width:900px; margin:0 auto; }
+
+  /* HERO */
+  .hero{ min-height:100svh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding-top:40px; }
+  .eyebrow{
+    font-family:'Caveat', cursive; font-size:1.6rem; color:var(--gold); font-weight:700;
+    letter-spacing:.5px; margin-bottom:6px;
+  }
+  h1{
+    font-family:'Fraunces', serif; font-weight:600; font-size:clamp(2.6rem, 8vw, 5rem);
+    line-height:1.02; letter-spacing:-1px;
+  }
+  h1 span{ color:var(--coral); font-style:italic; font-weight:500; }
+  .hero-sub{
+    margin-top:18px; font-size:1.05rem; color:#C9D0E0; max-width:480px; font-weight:300;
+  }
+
+  /* CAKE */
+  .cake-wrap{ margin-top:56px; display:flex; flex-direction:column; align-items:center; gap:18px; }
+  .cake-hint{ font-size:.85rem; color:#9AA5C0; letter-spacing:.3px; }
+  .cake{ position:relative; width:220px; height:170px; }
+  .candles{ position:absolute; top:-46px; left:0; width:100%; display:flex; justify-content:center; gap:22px; }
+  .candle{ cursor:pointer; display:flex; flex-direction:column; align-items:center; -webkit-tap-highlight-color: transparent; }
+  .flame{
+    width:10px; height:16px; border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
+    background:radial-gradient(circle at 50% 30%, #FFE9A8, var(--gold) 60%, var(--coral) 100%);
+    transition:opacity .25s, transform .25s;
+    animation:flicker 1.6s ease-in-out infinite;
+  }
+  @keyframes flicker{ 0%,100%{ transform:scale(1) rotate(-2deg);} 50%{ transform:scale(1.08) rotate(2deg);} }
+  .candle.out .flame{ opacity:0; transform:scale(.3); animation:none; }
+  .candle .stick{ width:6px; height:34px; background:linear-gradient(var(--cream), #D8CBB0); border-radius:2px; margin-top:2px; }
+  .cake-body{
+    position:absolute; bottom:0; width:100%; height:120px;
+    background:linear-gradient(180deg, #F2704F 0%, #C9502F 100%);
+    border-radius:14px 14px 30px 30px;
+    box-shadow:0 20px 50px rgba(0,0,0,.4);
+  }
+  .cake-body::before{
+    content:''; position:absolute; top:0; left:0; width:100%; height:22px;
+    background:var(--cream); border-radius:14px 14px 0 0;
+  }
+  .cake-drip{
+    position:absolute; top:14px; left:0; width:100%; height:20px;
+    background:
+      radial-gradient(circle at 10% 0, var(--gold) 0 10px, transparent 11px),
+      radial-gradient(circle at 30% 0, var(--gold) 0 8px, transparent 9px),
+      radial-gradient(circle at 55% 0, var(--gold) 0 11px, transparent 12px),
+      radial-gradient(circle at 78% 0, var(--gold) 0 9px, transparent 10px),
+      radial-gradient(circle at 95% 0, var(--gold) 0 8px, transparent 9px);
+  }
+  .cake-msg{ margin-top:14px; font-size:.95rem; color:var(--gold); font-weight:500; min-height:22px; }
+
+  /* CONFETTI */
+  #confetti-canvas{ position:fixed; inset:0; pointer-events:none; z-index:5; }
+
+  /* REVEAL CONTENT */
+  .reveal{ opacity:0; transform:translateY(30px); transition:opacity .8s ease, transform .8s ease; }
+  .reveal.show{ opacity:1; transform:translateY(0); }
+
+  .section-label{
+    font-family:'Caveat', cursive; font-size:1.5rem; color:var(--sage); font-weight:700; margin-bottom:6px;
+  }
+  h2{ font-family:'Fraunces', serif; font-weight:600; font-size:clamp(1.8rem,4vw,2.6rem); margin-bottom:28px; }
+
+  /* CAROUSEL */
+  .carousel{ position:relative; }
+  .carousel-track{
+    display:flex; overflow-x:auto; gap:16px; scroll-snap-type:x mandatory; padding-bottom:12px;
+    scrollbar-width:thin; scrollbar-color:var(--gold) transparent;
+  }
+  .photo-slide{
+    scroll-snap-align:center; flex:0 0 auto; width:280px; height:340px; border-radius:18px; overflow:hidden;
+    background:linear-gradient(160deg, var(--card), #142040);
+    display:flex; align-items:center; justify-content:center; flex-direction:column; gap:10px;
+    border:1px dashed rgba(232,163,61,.4); color:#8090B5; font-size:.9rem; text-align:center; padding:20px;
+  }
+  .photo-slide img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .photo-slide.filled{ border:none; }
+  .carousel-hint{ font-size:.8rem; color:#7684A8; margin-top:10px; }
+
+  /* ROAST/TOAST TOGGLE */
+  .toggle-wrap{ display:flex; gap:10px; margin-bottom:26px; }
+  .toggle-btn{
+    font-family:'Outfit'; font-weight:600; font-size:.9rem; padding:10px 22px; border-radius:999px;
+    background:transparent; border:1px solid rgba(232,163,61,.4); color:#C9D0E0; cursor:pointer; transition:all .25s;
+  }
+  .toggle-btn.active{ background:var(--gold); color:var(--navy-deep); border-color:var(--gold); }
+  .cards{ display:grid; gap:14px; }
+  .rt-card{
+    background:var(--card); border-radius:16px; padding:20px 22px; font-size:1rem; line-height:1.5;
+    border-left:3px solid var(--coral); display:none;
+  }
+  .rt-card.roast{ border-left-color:var(--coral); }
+  .rt-card.toast{ border-left-color:var(--sage); display:none; }
+  .cards.show-roast .rt-card.roast{ display:block; }
+  .cards.show-toast .rt-card.toast{ display:block; }
+
+  /* MESSAGE */
+  .message-card{
+    background:linear-gradient(160deg, var(--card), #17233F);
+    border-radius:22px; padding:40px 32px; position:relative; overflow:hidden;
+  }
+  .message-card::before{
+    content:'"'; font-family:'Fraunces', serif; font-size:8rem; color:rgba(232,163,61,.15);
+    position:absolute; top:-10px; left:10px; line-height:1;
+  }
+  .message-body{ font-size:1.15rem; line-height:1.7; color:#E7E2D6; position:relative; z-index:1; }
+  .signature{ font-family:'Caveat', cursive; font-size:1.7rem; color:var(--gold); margin-top:22px; }
+
+  /* FOOTER */
+  footer{ text-align:center; padding:60px 24px 80px; color:#6C7896; font-size:.85rem; }
+  footer .big{ font-family:'Fraunces', serif; font-style:italic; font-size:1.4rem; color:var(--gold); margin-bottom:10px; }
+
+  @media (prefers-reduced-motion: reduce){
+    .flame{ animation:none; }
+    .reveal{ transition:none; }
+  }
+
+  ::-webkit-scrollbar{ height:8px; }
+  ::-webkit-scrollbar-thumb{ background:var(--gold); border-radius:4px; }
+</style>
+</head>
+<body>
+
+<div class="blob blob1"></div>
+<div class="blob blob2"></div>
+<div class="blob blob3"></div>
+<canvas id="confetti-canvas"></canvas>
+
+<section class="hero">
+  <div class="eyebrow">The whole team got together for this one</div>
+  <h1>Happy Birthday,<br><span>Pradipta</span></h1>
+  <p class="hero-sub">One candle at a time. Go on, blow them out.</p>
+
+  <div class="cake-wrap">
+    <div class="cake">
+      <div class="candles" id="candles"></div>
+      <div class="cake-body">
+        <div class="cake-drip"></div>
+      </div>
+    </div>
+    <div class="cake-msg" id="cakeMsg">3 candles left</div>
+  </div>
+</section>
+
+<section class="reveal" id="photosSection">
+  <div class="section-label">a little proof</div>
+  <h2>Some of our favorite moments</h2>
+  <div class="carousel">
+    <div class="carousel-track" id="carouselTrack">
+      <div class="photo-slide filled"><img src="images/pradipta/photo1.jpg" alt="Pradipta"></div>
+      <div class="photo-slide filled"><img src="images/pradipta/photo2.jpg" alt="Pradipta"></div>
+      <div class="photo-slide filled"><img src="images/pradipta/photo3.jpg" alt="Pradipta"></div>
+      <div class="photo-slide filled"><img src="images/pradipta/photo4.jpg" alt="Pradipta"></div>
+      <div class="photo-slide filled"><img src="images/pradipta/photo5.jpg" alt="Pradipta"></div>
+      <div class="photo-slide filled"><img src="images/pradipta/photo6.jpg" alt="Pradipta"></div>
+      <div class="photo-slide filled"><img src="images/pradipta/photo7.jpg" alt="Pradipta"></div>
+      <div class="photo-slide filled"><img src="images/pradipta/photo8.jpg" alt="Pradipta"></div>
+      <div class="photo-slide filled"><img src="images/pradipta/photo9.jpg" alt="Pradipta"></div>
+    </div>
+  </div>
+  <div class="carousel-hint">swipe or scroll →</div>
+</section>
+
+<section class="reveal" id="rtSection">
+  <div class="section-label">the honest bit</div>
+  <h2>Roast &amp; Toast</h2>
+  <div class="toggle-wrap">
+    <button class="toggle-btn active" id="roastBtn">Roast 🔥</button>
+    <button class="toggle-btn" id="toastBtn">Toast 🥂</button>
+  </div>
+  <div class="cards show-roast" id="cards">
+    <div class="rt-card roast">Pradipta has been at this org so long, he's basically in the onboarding deck as a landmark. "Turn left at the cafeteria, you'll see Pradipta."</div>
+    <div class="rt-card roast">He used to be the guy with the wildest weekend stories. Now his biggest flex is a full night's sleep — ambitious goal, Pradipta, ambitious goal.</div>
+    <div class="rt-card roast">Nineteen years in and he still acts surprised every single time someone asks him to "just hop on a quick call."</div>
+    <div class="rt-card toast">Nineteen years in and he's still the first one on the court, the first to suggest a game, and somehow still the most competitive person in the room. Respect.</div>
+    <div class="rt-card toast">Becoming a dad hasn't changed the important stuff — he's still the calmest person in the room, just now with significantly less sleep to show for it.</div>
+    <div class="rt-card toast">Genuinely one of the good ones — on the field and off it. Today's about him, so — happy birthday, Pradipta. Go enjoy the cake before someone hands you a baby to hold.</div>
+  </div>
+</section>
+
+<section class="reveal" id="messageSection">
+  <div class="section-label">from all of us</div>
+  <h2>Happy Birthday!</h2>
+  <div class="message-card">
+    <p class="message-body" id="messageBody">
+      Happy Birthday, Pradipta! You've somehow perfected the art of being everywhere when it matters and nowhere near the drama the rest of the time — a skill we're all still trying to figure out. Add "new dad" to the resume and honestly, of course you're handling it like it's nothing.
+      <br><br>
+      Hope today is actually about you for a change — cake, some quiet, and zero meetings. Here's to another great year. Happy Birthday!
+    </p>
+    <div class="signature">— The team</div>
+  </div>
+</section>
+
+<footer>
+  <div class="big">Have a great one, Pradipta.</div>
+  Made with a little chaos by the team.
+</footer>
+
+<script>
+// ---- Candle blow-out interaction ----
+const candlesEl = document.getElementById('candles');
+const cakeMsg = document.getElementById('cakeMsg');
+const total = 3;
+let litCount = total;
+
+for(let i=0;i<total;i++){
+  const c = document.createElement('div');
+  c.className = 'candle';
+  c.innerHTML = '<div class="flame"></div><div class="stick"></div>';
+  c.addEventListener('click', () => {
+    if(c.classList.contains('out')) return;
+    c.classList.add('out');
+    litCount--;
+    burstConfetti(c);
+    if(litCount > 0){
+      cakeMsg.textContent = litCount + ' candle' + (litCount===1?'':'s') + ' left';
+    } else {
+      cakeMsg.textContent = 'Make a wish 🎉';
+      revealAll();
+      bigConfetti();
+    }
+  });
+  candlesEl.appendChild(c);
+}
+
+function revealAll(){
+  document.querySelectorAll('.reveal').forEach((el, idx) => {
+    setTimeout(()=> el.classList.add('show'), idx * 180);
+  });
+  setTimeout(()=>{
+    document.getElementById('photosSection').scrollIntoView({behavior:'smooth', block:'start'});
+  }, 700);
+}
+
+// ---- Roast / Toast toggle ----
+const roastBtn = document.getElementById('roastBtn');
+const toastBtn = document.getElementById('toastBtn');
+const cards = document.getElementById('cards');
+roastBtn.addEventListener('click', () => {
+  cards.className = 'cards show-roast';
+  roastBtn.classList.add('active');
+  toastBtn.classList.remove('active');
+});
+toastBtn.addEventListener('click', () => {
+  cards.className = 'cards show-toast';
+  toastBtn.classList.add('active');
+  roastBtn.classList.remove('active');
+});
+
+// ---- Confetti ----
+const canvas = document.getElementById('confetti-canvas');
+const ctx = canvas.getContext('2d');
+function resize(){ canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+resize();
+window.addEventListener('resize', resize);
+
+let particles = [];
+const colors = ['#E8A33D','#F2704F','#8A9B6E','#FAF3E7'];
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function burstConfetti(fromEl){
+  if(reducedMotion) return;
+  const rect = fromEl.getBoundingClientRect();
+  for(let i=0;i<24;i++){
+    particles.push({
+      x: rect.left + rect.width/2,
+      y: rect.top,
+      vx: (Math.random()-0.5)*6,
+      vy: Math.random()*-6 - 2,
+      size: Math.random()*6+4,
+      color: colors[Math.floor(Math.random()*colors.length)],
+      rot: Math.random()*360,
+      vr: (Math.random()-0.5)*10,
+      life: 100
+    });
+  }
+}
+function bigConfetti(){
+  if(reducedMotion) return;
+  for(let i=0;i<120;i++){
+    particles.push({
+      x: window.innerWidth/2 + (Math.random()-0.5)*300,
+      y: window.innerHeight*0.3,
+      vx: (Math.random()-0.5)*10,
+      vy: Math.random()*-10 - 3,
+      size: Math.random()*7+4,
+      color: colors[Math.floor(Math.random()*colors.length)],
+      rot: Math.random()*360,
+      vr: (Math.random()-0.5)*12,
+      life: 140
+    });
+  }
+}
+function animate(){
+  ctx.clearRect(0,0,canvas.width, canvas.height);
+  particles.forEach(p=>{
+    p.vy += 0.18;
+    p.x += p.vx;
+    p.y += p.vy;
+    p.rot += p.vr;
+    p.life--;
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(p.rot * Math.PI/180);
+    ctx.fillStyle = p.color;
+    ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size*0.6);
+    ctx.restore();
+  });
+  particles = particles.filter(p => p.life > 0 && p.y < window.innerHeight + 50);
+  requestAnimationFrame(animate);
+}
+animate();
+</script>
+
+</body>
+</html>
